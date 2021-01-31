@@ -1,0 +1,14 @@
+<h2>Welcome {{user.name}}</h2>
+<div>
+    <ul>
+        <li *ngFor="let idea of user.assignedIdeas">
+            <table>
+                <tr>{{idea.ideaId}}</tr>
+                <tr>{{idea.ideaName}}</tr>
+                <tr>{{idea.ideaDescription}}</tr>
+                <tr><button id="evaluated" (click) = "evaluate(idea.ideaId)">Evaluate</button></tr>
+            </table>
+        </li>
+      </ul>
+</div>
+

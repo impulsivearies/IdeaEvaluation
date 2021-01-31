@@ -1,0 +1,228 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="IdeaEvaluationModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="evaluation">
+          <Key>
+            <PropertyRef Name="JudgeId" />
+            <PropertyRef Name="IdeaId" />
+          </Key>
+          <Property Name="JudgeId" Type="int" Nullable="false" />
+          <Property Name="IdeaId" Type="int" Nullable="false" />
+          <Property Name="IsEvaluationCompleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ideas">
+          <Key>
+            <PropertyRef Name="IdeaId" />
+          </Key>
+          <Property Name="IdeaId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdeaName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="IdeaDescription" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="EvaluatedCount" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="judge">
+          <Key>
+            <PropertyRef Name="JudgeId" />
+          </Key>
+          <Property Name="JudgeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="EmailId" Type="varchar" MaxLength="300" />
+        </EntityType>
+        <Association Name="FK_evaluation_ideas">
+          <End Role="ideas" Type="Self.ideas" Multiplicity="1" />
+          <End Role="evaluation" Type="Self.evaluation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ideas">
+              <PropertyRef Name="IdeaId" />
+            </Principal>
+            <Dependent Role="evaluation">
+              <PropertyRef Name="IdeaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_evaluation_judges">
+          <End Role="judge" Type="Self.judge" Multiplicity="1" />
+          <End Role="evaluation" Type="Self.evaluation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="judge">
+              <PropertyRef Name="JudgeId" />
+            </Principal>
+            <Dependent Role="evaluation">
+              <PropertyRef Name="JudgeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="IdeaAssignment" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="JudgeId" Type="int" Mode="In" />
+          <Parameter Name="IdeasPerJudge" Type="int" Mode="In" />
+          <Parameter Name="MinTimesIdeaEvaluates" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="IdeaEvaluationModelStoreContainer">
+          <EntitySet Name="evaluation" EntityType="Self.evaluation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ideas" EntityType="Self.ideas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="judge" EntityType="Self.judge" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_evaluation_ideas" Association="Self.FK_evaluation_ideas">
+            <End Role="ideas" EntitySet="ideas" />
+            <End Role="evaluation" EntitySet="evaluation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_evaluation_judges" Association="Self.FK_evaluation_judges">
+            <End Role="judge" EntitySet="judge" />
+            <End Role="evaluation" EntitySet="evaluation" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="IdeaEvaluationModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="evaluation">
+          <Key>
+            <PropertyRef Name="JudgeId" />
+            <PropertyRef Name="IdeaId" />
+          </Key>
+          <Property Name="JudgeId" Type="Int32" Nullable="false" />
+          <Property Name="IdeaId" Type="Int32" Nullable="false" />
+          <Property Name="IsEvaluationCompleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="idea" Relationship="Self.FK_evaluation_ideas" FromRole="evaluation" ToRole="ideas" />
+          <NavigationProperty Name="judge" Relationship="Self.FK_evaluation_judges" FromRole="evaluation" ToRole="judge" />
+        </EntityType>
+        <EntityType Name="idea">
+          <Key>
+            <PropertyRef Name="IdeaId" />
+          </Key>
+          <Property Name="IdeaId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdeaName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="IdeaDescription" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="EvaluatedCount" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="evaluations" Relationship="Self.FK_evaluation_ideas" FromRole="ideas" ToRole="evaluation" />
+        </EntityType>
+        <EntityType Name="judge">
+          <Key>
+            <PropertyRef Name="JudgeId" />
+          </Key>
+          <Property Name="JudgeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="evaluations" Relationship="Self.FK_evaluation_judges" FromRole="judge" ToRole="evaluation" />
+          <Property Name="EmailId" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK_evaluation_ideas">
+          <End Role="ideas" Type="Self.idea" Multiplicity="1" />
+          <End Role="evaluation" Type="Self.evaluation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ideas">
+              <PropertyRef Name="IdeaId" />
+            </Principal>
+            <Dependent Role="evaluation">
+              <PropertyRef Name="IdeaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_evaluation_judges">
+          <End Role="judge" Type="Self.judge" Multiplicity="1" />
+          <End Role="evaluation" Type="Self.evaluation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="judge">
+              <PropertyRef Name="JudgeId" />
+            </Principal>
+            <Dependent Role="evaluation">
+              <PropertyRef Name="JudgeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="IdeaEvaluationEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="evaluations" EntityType="Self.evaluation" />
+          <EntitySet Name="ideas" EntityType="Self.idea" />
+          <EntitySet Name="judges" EntityType="Self.judge" />
+          <AssociationSet Name="FK_evaluation_ideas" Association="Self.FK_evaluation_ideas">
+            <End Role="ideas" EntitySet="ideas" />
+            <End Role="evaluation" EntitySet="evaluations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_evaluation_judges" Association="Self.FK_evaluation_judges">
+            <End Role="judge" EntitySet="judges" />
+            <End Role="evaluation" EntitySet="evaluations" />
+          </AssociationSet>
+          <FunctionImport Name="IdeaAssignment" ReturnType="Collection(IdeaEvaluationModel.IdeaAssignment_Result)">
+            <Parameter Name="JudgeId" Mode="In" Type="Int32" />
+            <Parameter Name="IdeasPerJudge" Mode="In" Type="Int32" />
+            <Parameter Name="MinTimesIdeaEvaluates" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="IdeaAssignment_Result">
+          <Property Type="Int32" Name="IdeaId" Nullable="false" />
+          <Property Type="String" Name="IdeaName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="IdeaDescription" Nullable="false" MaxLength="200" />
+          <Property Type="Int32" Name="EvaluatedCount" Nullable="false" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="IdeaEvaluationModelStoreContainer" CdmEntityContainer="IdeaEvaluationEntities">
+          <EntitySetMapping Name="evaluations">
+            <EntityTypeMapping TypeName="IdeaEvaluationModel.evaluation">
+              <MappingFragment StoreEntitySet="evaluation">
+                <ScalarProperty Name="JudgeId" ColumnName="JudgeId" />
+                <ScalarProperty Name="IdeaId" ColumnName="IdeaId" />
+                <ScalarProperty Name="IsEvaluationCompleted" ColumnName="IsEvaluationCompleted" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ideas">
+            <EntityTypeMapping TypeName="IdeaEvaluationModel.idea">
+              <MappingFragment StoreEntitySet="ideas">
+                <ScalarProperty Name="IdeaId" ColumnName="IdeaId" />
+                <ScalarProperty Name="IdeaName" ColumnName="IdeaName" />
+                <ScalarProperty Name="IdeaDescription" ColumnName="IdeaDescription" />
+                <ScalarProperty Name="EvaluatedCount" ColumnName="EvaluatedCount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="judges">
+            <EntityTypeMapping TypeName="IdeaEvaluationModel.judge">
+              <MappingFragment StoreEntitySet="judge">
+                <ScalarProperty Name="EmailId" ColumnName="EmailId" />
+                <ScalarProperty Name="JudgeId" ColumnName="JudgeId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="IdeaAssignment" FunctionName="IdeaEvaluationModel.Store.IdeaAssignment">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="IdeaEvaluationModel.IdeaAssignment_Result">
+                <ScalarProperty Name="IdeaId" ColumnName="IdeaId" />
+                <ScalarProperty Name="IdeaName" ColumnName="IdeaName" />
+                <ScalarProperty Name="IdeaDescription" ColumnName="IdeaDescription" />
+                <ScalarProperty Name="EvaluatedCount" ColumnName="EvaluatedCount" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

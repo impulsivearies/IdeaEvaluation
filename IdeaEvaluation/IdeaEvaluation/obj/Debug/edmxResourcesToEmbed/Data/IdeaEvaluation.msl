@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="IdeaEvaluationModelStoreContainer" CdmEntityContainer="IdeaEvaluationEntities">
+    <EntitySetMapping Name="evaluations">
+      <EntityTypeMapping TypeName="IdeaEvaluationModel.evaluation">
+        <MappingFragment StoreEntitySet="evaluation">
+          <ScalarProperty Name="JudgeId" ColumnName="JudgeId" />
+          <ScalarProperty Name="IdeaId" ColumnName="IdeaId" />
+          <ScalarProperty Name="IsEvaluationCompleted" ColumnName="IsEvaluationCompleted" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ideas">
+      <EntityTypeMapping TypeName="IdeaEvaluationModel.idea">
+        <MappingFragment StoreEntitySet="ideas">
+          <ScalarProperty Name="IdeaId" ColumnName="IdeaId" />
+          <ScalarProperty Name="IdeaName" ColumnName="IdeaName" />
+          <ScalarProperty Name="IdeaDescription" ColumnName="IdeaDescription" />
+          <ScalarProperty Name="EvaluatedCount" ColumnName="EvaluatedCount" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="judges">
+      <EntityTypeMapping TypeName="IdeaEvaluationModel.judge">
+        <MappingFragment StoreEntitySet="judge">
+          <ScalarProperty Name="EmailId" ColumnName="EmailId" />
+          <ScalarProperty Name="JudgeId" ColumnName="JudgeId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="IdeaAssignment" FunctionName="IdeaEvaluationModel.Store.IdeaAssignment">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="IdeaEvaluationModel.IdeaAssignment_Result">
+          <ScalarProperty Name="IdeaId" ColumnName="IdeaId" />
+          <ScalarProperty Name="IdeaName" ColumnName="IdeaName" />
+          <ScalarProperty Name="IdeaDescription" ColumnName="IdeaDescription" />
+          <ScalarProperty Name="EvaluatedCount" ColumnName="EvaluatedCount" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+  </EntityContainerMapping>
+</Mapping>

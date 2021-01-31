@@ -1,0 +1,22 @@
+
+    <table>
+        <tr>
+            <td>
+                <label>Email Id</label>
+            </td>
+            <td>
+                <input type="email" [(ngModel)] = "userLogin.emailid" required>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Password</label>
+            </td>
+            <td>
+                <input type="password" [(ngModel)] = "userLogin.password" required>
+            </td>
+        </tr>
+        <tr>
+            <button id="loginButton" type="submit" (click) = "onLogin()" >Login</button>
+        </tr>
+    </table>

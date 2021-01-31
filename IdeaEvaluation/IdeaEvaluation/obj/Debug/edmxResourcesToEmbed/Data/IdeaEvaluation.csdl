@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="IdeaEvaluationModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="evaluation">
+    <Key>
+      <PropertyRef Name="JudgeId" />
+      <PropertyRef Name="IdeaId" />
+    </Key>
+    <Property Name="JudgeId" Type="Int32" Nullable="false" />
+    <Property Name="IdeaId" Type="Int32" Nullable="false" />
+    <Property Name="IsEvaluationCompleted" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="idea" Relationship="Self.FK_evaluation_ideas" FromRole="evaluation" ToRole="ideas" />
+    <NavigationProperty Name="judge" Relationship="Self.FK_evaluation_judges" FromRole="evaluation" ToRole="judge" />
+  </EntityType>
+  <EntityType Name="idea">
+    <Key>
+      <PropertyRef Name="IdeaId" />
+    </Key>
+    <Property Name="IdeaId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="IdeaName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="IdeaDescription" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="EvaluatedCount" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="evaluations" Relationship="Self.FK_evaluation_ideas" FromRole="ideas" ToRole="evaluation" />
+  </EntityType>
+  <EntityType Name="judge">
+    <Key>
+      <PropertyRef Name="JudgeId" />
+    </Key>
+    <Property Name="JudgeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Password" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="evaluations" Relationship="Self.FK_evaluation_judges" FromRole="judge" ToRole="evaluation" />
+    <Property Name="EmailId" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <Association Name="FK_evaluation_ideas">
+    <End Role="ideas" Type="Self.idea" Multiplicity="1" />
+    <End Role="evaluation" Type="Self.evaluation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ideas">
+        <PropertyRef Name="IdeaId" />
+      </Principal>
+      <Dependent Role="evaluation">
+        <PropertyRef Name="IdeaId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_evaluation_judges">
+    <End Role="judge" Type="Self.judge" Multiplicity="1" />
+    <End Role="evaluation" Type="Self.evaluation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="judge">
+        <PropertyRef Name="JudgeId" />
+      </Principal>
+      <Dependent Role="evaluation">
+        <PropertyRef Name="JudgeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="IdeaEvaluationEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="evaluations" EntityType="Self.evaluation" />
+    <EntitySet Name="ideas" EntityType="Self.idea" />
+    <EntitySet Name="judges" EntityType="Self.judge" />
+    <AssociationSet Name="FK_evaluation_ideas" Association="Self.FK_evaluation_ideas">
+      <End Role="ideas" EntitySet="ideas" />
+      <End Role="evaluation" EntitySet="evaluations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_evaluation_judges" Association="Self.FK_evaluation_judges">
+      <End Role="judge" EntitySet="judges" />
+      <End Role="evaluation" EntitySet="evaluations" />
+    </AssociationSet>
+    <FunctionImport Name="IdeaAssignment" ReturnType="Collection(IdeaEvaluationModel.IdeaAssignment_Result)">
+      <Parameter Name="JudgeId" Mode="In" Type="Int32" />
+      <Parameter Name="IdeasPerJudge" Mode="In" Type="Int32" />
+      <Parameter Name="MinTimesIdeaEvaluates" Mode="In" Type="Int32" />
+    </FunctionImport>
+  </EntityContainer>
+  <ComplexType Name="IdeaAssignment_Result">
+    <Property Type="Int32" Name="IdeaId" Nullable="false" />
+    <Property Type="String" Name="IdeaName" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="IdeaDescription" Nullable="false" MaxLength="200" />
+    <Property Type="Int32" Name="EvaluatedCount" Nullable="false" />
+  </ComplexType>
+</Schema>
