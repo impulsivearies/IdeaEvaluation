@@ -35,3 +35,9 @@ Ideas to evaluate are picked from evaluation table, hence stored procedure first
 2. Insert data from 1 in evaluations table
 3. Show ideas from data in evaluation table against judgeid where isevaluationcompleted = 0 (assigned but not yet evaluated)
 4. Provide evaluation button on UI, when judge clicks the button, mark isevaluationcompleted = 1 and increment idea counter in ideas table.
+
+UI:  
+Login page -> enter emailid and password  
+Dashboard:  
+Shows list of ideas assigned with evaluate button  
+
